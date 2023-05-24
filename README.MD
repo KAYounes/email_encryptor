@@ -21,7 +21,7 @@ First to use either apps the server should be running. To run the server run the
 If it is the first run then a ```data/``` directory was created with subfolders as well. Open the ```data/storage_files/email_1.dat``` and write the sender email on the first line and the password on the sendon line.
 The same should be done for the recipient email at ```data/storage_files/email_2.dat```.
 
-Now you while the server is running and the credentials of the sender and recipient are correct, the email sender app ```email_app.py``` and ```email_app_adv.py``` can be ran.
+Now you while the server is running and the credentials of the sender and recipient are correct, the email sender app ```email_composer_app.py``` and ```inbox_reader_app.py``` can be ran.
 
 # Email Constrains
 The email sender script is configures to work with the domain ```@eng.asu.edu.eg``` and using another domain will proberly need some configuration in the ```email_sender.py``` script.

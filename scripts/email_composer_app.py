@@ -196,7 +196,7 @@ class App:
 
             return True
         except Exception as e:
-            print("\n", "="*20, f"[ERROR {e}] [script: email_app.py] [function: validate_email] [solution: check input]", "="*20, "\n", sep='', end='')
+            print("\n", "="*20, f"[ERROR {e}] [script: email_composer_app.py] [function: validate_email] [solution: check input]", "="*20, "\n", sep='', end='')
             return False
 
     def button_clear_command(self):
