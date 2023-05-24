@@ -1,6 +1,5 @@
 import os, random, struct
 from Crypto.Cipher import AES
-
 import path_handler
 
 def encrypt_file(key, in_filename, out_filename=None, chunksize=16):
