@@ -65,8 +65,8 @@ class InboxReader():
         status, message_ids = self.imap_client.search(None, self.search_filter)
         message_ids = bytes.decode(message_ids[0], 'utf-8').split()[::-1]
 
-        if(limit > 100):
-            limit = 100
+        if(limit is None or limit > 50):
+            limit = 50
             
         return message_ids[0:limit]
 
