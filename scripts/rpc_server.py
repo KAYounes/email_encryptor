@@ -2,22 +2,22 @@ import xmlrpc.server
 import pickle
 import secrets
 import os
-# from Crypto.Cipher import AES
 import Crypto.Cipher.AES
-from tabulate import tabulate
-
 import path_handler
+from tabulate import tabulate
 
 class KDS(xmlrpc.server.SimpleXMLRPCServer):
 
     def serve_forever(self):
-        # self.register_function(self.add, "add")
+        """
+            Starts the server
+            - check database exits else creates it
+            - exposes remote procedures
+        """
+
         if(self.database_exist()):
             self.mappings = self.load_database()
         else:
-            # print("="*50)
-            # print("CREATING DATABASE")
-            # print("="*50)
             self.mappings = {}
             self.create_database()
 
@@ -51,6 +51,9 @@ class KDS(xmlrpc.server.SimpleXMLRPCServer):
         return os.path.exists(self.get_database_path())
 
     def generate_key(self):
+        """
+            Generates 128-bit Key using a secured method
+        """
         return secrets.token_hex(16)
 
     def register(self, email):
@@ -80,21 +83,32 @@ class KDS(xmlrpc.server.SimpleXMLRPCServer):
         print(tabulate(table, tablefmt="plain", stralign="right"))
 
     def generate_encrypted_shared_key(self, sender_email, recipient_email):
+        """
+            Generates a shared key, which is then encrypted using both the 
+            sender's private key and the recpient's private key.
+            Then sends the sender's copy of the encrypted shared key, the 
+            recipient's copy of the encrypted shared key, the sender's nonce,
+            and the recipient's nonce.
+        """
         sender_key = self.check_registration(sender_email)
         recipient_key = self.check_registration(recipient_email)
         
+        # If sender or recipient are not registered cancel operation
         if(not sender_key and not recipient_key):
             return None
         
         shared_key = self.generate_key()
 
+        # Convert keys to bytes
         shared_key = bytes(shared_key, "utf-8")
         sender_key = bytes(sender_key, "utf-8")
         recipient_key = bytes(recipient_key, "utf-8")
         
+        # Encrypts shared key using sender's priavte key
         cipher_sender = Crypto.Cipher.AES.new(sender_key, Crypto.Cipher.AES.MODE_GCM)
         sender_encrypted_shared_key = cipher_sender.encrypt(shared_key)
 
+        # Encrypts shared key using recipient's priavte key
         cipher_recipient= Crypto.Cipher.AES.new(recipient_key, Crypto.Cipher.AES.MODE_GCM)
         recipient_encrypted_shared_key = cipher_recipient.encrypt(shared_key)
         
